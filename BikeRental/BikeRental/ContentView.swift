@@ -35,10 +35,7 @@ struct ContentView: View {
                     label: {BikeRow(bike:"bike4", number: "4")
               
                         }).navigationTitle("تأجير الدراجات")
-                NavigationLink(destination: information(bike: "bike2"),
-                    label: {BikeRow(bike:"bike2", number: "5")
-              
-                        }).navigationTitle("تأجير الدراجات")
+                
                 
 
 
@@ -97,10 +94,10 @@ struct information: View {
     @State var name = ""
 
     @State var PhNumb = ""
-    @State var counter1 = 0
-    @State var counter2 = 0
+    @State var hours = 0
+    @State var numBike = 0
     @State var price = 3
-
+    @State var total = 0.0
     
     var body: some View {
        
@@ -116,7 +113,12 @@ struct information: View {
             
             HStack (alignment: .center){
             Button(action: {
-                counter1 -= 1
+                if hours > 0 {
+                hours -= 1
+                }
+                else {
+                    
+                }
             }, label: {
                
                 Image(systemName: "minus")
@@ -128,12 +130,12 @@ struct information: View {
                   
                 
             })
-                Text("\(counter1)")
+                Text("\(hours)")
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                 
                 Button(action: {
-                    counter1 += 1
+                    hours += 1
                 }, label: {
                     
                     Image(systemName: "plus")
@@ -155,7 +157,13 @@ struct information: View {
             
             HStack (alignment: .center){
             Button(action: {
-                counter2 -= 1
+                if numBike > 0 {
+                    numBike -= 1
+                }
+                else {
+                    
+                }
+                
             }, label: {
                
                 Image(systemName: "minus")
@@ -168,12 +176,12 @@ struct information: View {
                 
             })
         
-                Text("\(counter2)")
+                Text("\(numBike)")
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                 
                 Button(action: {
-                    counter2 += 1
+                    numBike += 1
                 }, label: {
                     
                     Image(systemName: "plus")
@@ -193,16 +201,92 @@ struct information: View {
             Spacer()
                 
         }
-        let total = (price * counter1) * counter2;
+        let total = (price * hours) * numBike;
         Text("\(total)")
-            .font(.body)
+            .font(.title)
+            .fontWeight(.bold)
+        Text("المبلغ الكلي")
+            .font(.title)
             .fontWeight(.bold)
         
-        
-    }
+       
+        NavigationLink(destination: Checkout(name: $name, hours: $hours, numBike: $numBike, PhNumb: $PhNumb, total: $total)) {
+                    Text("اضغط للمتابعه")
+                        .font(.title)
+                   
+                        .foregroundColor(Color.white)
+
+                        .multilineTextAlignment(.center)
+                        .frame(width: 400.0)
+                        .background(Color.blue)
+                 }.buttonStyle(PlainButtonStyle())
     
     
-    
-}
 
 }
+}
+}
+
+
+
+struct Checkout: View {
+    @Binding var name: String
+    @Binding var hours: Int
+    @Binding var numBike: Int
+    @Binding var PhNumb: String
+    @Binding var total: Double
+    
+    var body: some View {
+        VStack{
+            
+        Text("الفاتورة")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            HStack {
+            Text("الاسم")
+                Spacer()
+                Text("\(name)")
+                
+            }
+            .padding()
+            HStack {
+            Text("الساعات")
+                Spacer()
+                Text("\(hours)")
+                
+            }
+            .padding()
+            
+            HStack {
+            Text("رقم الهاتف")
+                Spacer()
+                Text("\(PhNumb)")
+                
+            }
+            .padding()
+            
+            HStack {
+            Text("المبلغ")
+                Spacer()
+                Text("\(total)")
+                
+            }
+            .padding()
+        }
+        Spacer()
+        
+        Button(action: {}, label: {
+            Text("ادفع الان")
+                .font(.title)
+           
+                .foregroundColor(Color.white)
+
+                .multilineTextAlignment(.center)
+                .frame(width: 400.0)
+                .background(Color.blue)
+        })
+        
+            
+    }
+}
+
